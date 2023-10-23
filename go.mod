@@ -1,4 +1,4 @@
-module gitflic.ru/project/getapp/boosty
+module kovardin.ru/projects/boosty
 
 go 1.21
 
