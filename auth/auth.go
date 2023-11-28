@@ -28,7 +28,7 @@ type Auth struct {
 
 func New(options ...Option) (*Auth, error) {
 	auth := &Auth{
-		file: ".boosty",
+		file: "",
 		info: Info{},
 	}
 
