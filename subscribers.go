@@ -1,5 +1,11 @@
 package boosty
 
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
 type Subscriber struct {
 	HasAvatar bool `json:"hasAvatar"`
 	Payments  int  `json:"payments"`
@@ -30,4 +36,34 @@ type Subscriber struct {
 	NextPayTime   int    `json:"nextPayTime"`
 	Price         int    `json:"price"`
 	AvatarURL     string `json:"avatarUrl"`
+}
+
+type Subscribers struct {
+	Offset int          `json:"offset"`
+	Total  int          `json:"total"`
+	Limit  int          `json:"limit"`
+	Data   []Subscriber `json:"data"`
+}
+
+func (b *Boosty) Subscribers(offset, limit int) ([]Subscriber, error) {
+	u := fmt.Sprintf("/v1/blog/%s/subscribers?sort_by=on_time&offset=%d&limit=%d&order=gt", b.blog, offset, limit)
+	resp, err := b.request.Request(http.MethodGet, u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error on do request: %w", err)
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode > 400 {
+		return nil, fmt.Errorf("boosty subscribers status error")
+	}
+
+	res := Subscribers{
+		Data: []Subscriber{},
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return nil, fmt.Errorf("boosty subscribers decode error: %w", err)
+	}
+
+	return res.Data, nil
 }
