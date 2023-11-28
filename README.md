@@ -16,9 +16,9 @@ go get kovardin.ru/projects/boosty
 
 ```golang
 auth, err := auth.New(
-	auth.WithFile(".boosty"),
-    // auth.WithInfo(auth.Info{}),
-    auth.WithInfoUpdateCallback(func (i auth.Info) {
+	auth.WithFile(".boosty"), 
+	// auth.WithInfo(auth.Info{}), 
+	auth.WithInfoUpdateCallback(func (i auth.Info) {
         log.Printf("info update: %+v\n", i)
     }),
 )
