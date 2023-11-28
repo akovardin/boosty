@@ -1,9 +1,9 @@
 package boosty
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type Targets struct {
@@ -23,29 +23,15 @@ type Target struct {
 	BloggerURL  string      `json:"bloggerUrl"`
 }
 
-func (b *Boosty) Targets(deleted bool) (*Targets, error) {
-	u := fmt.Sprintf("/v1/target/%s/", b.blog)
-	if deleted {
-		u = u + "?show_deleted=true"
+func (b *Boosty) Targets(values url.Values) (*Targets, error) {
+	u := fmt.Sprintf("/v1/target/%s/?%s", b.blog, values.Encode())
+
+	m := Method[Targets]{
+		request: b.request,
+		method:  http.MethodGet,
+		url:     u,
+		values:  values,
 	}
 
-	resp, err := b.request.Request(http.MethodGet, u, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error on do request: %w", err)
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 400 {
-		return nil, fmt.Errorf("boosty stats status error")
-	}
-
-	res := &Targets{
-		Data: []Target{},
-	}
-	if err := json.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, fmt.Errorf("boosty stats decode error: %w", err)
-	}
-
-	return res, nil
+	return m.Call(Targets{})
 }

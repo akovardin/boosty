@@ -1,9 +1,9 @@
 package boosty
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type Blog struct {
@@ -64,21 +64,12 @@ type Blog struct {
 
 func (b *Boosty) Blog() (*Blog, error) {
 	u := fmt.Sprintf("/v1/blog/%s", b.blog)
-	resp, err := b.request.Request(http.MethodGet, u, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error on do request: %w", err)
+	m := Method[Blog]{
+		request: b.request,
+		method:  http.MethodGet,
+		url:     u,
+		values:  url.Values{},
 	}
 
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 400 {
-		return nil, fmt.Errorf("boosty blog status error")
-	}
-
-	res := &Blog{}
-	if err := json.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, fmt.Errorf("boosty blog decode error: %w", err)
-	}
-
-	return res, nil
+	return m.Call(Blog{})
 }

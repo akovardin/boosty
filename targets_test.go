@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -58,7 +59,10 @@ func (s *TargetsTestSuite) TestStats() {
 			b, err := New("", WithRequest(req))
 			s.Assert().NoError(err)
 
-			stats, err := b.Targets(true)
+			values := url.Values{}
+			values.Add("show_deleted", "true")
+
+			stats, err := b.Targets(values)
 
 			s.Assert().NoError(err)
 			s.Assert().Equal(test.targetsCount, len(stats.Data))

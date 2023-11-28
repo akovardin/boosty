@@ -6,12 +6,6 @@ import (
 	"os"
 )
 
-// {
-//"accessToken":"5a59369066a235f2c5cb74e06df0886c3a748c26d970cf891f7a94f0c4dc0685",
-//"refreshToken":"38d0a930576b13799ddd3e59813ec28966484cb84c8632b2438ebe9cdc7f8de8",
-//"expiresAt":1700434525923
-//}
-
 type Callback func(info Info)
 
 type Info struct {

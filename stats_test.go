@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -58,7 +59,7 @@ func (s *StatsTestSuite) TestStats() {
 			b, err := New("", WithRequest(req))
 			s.Assert().NoError(err)
 
-			stats, err := b.Stats()
+			stats, err := b.Stats(url.Values{})
 
 			s.Assert().NoError(err)
 			s.Assert().Equal(test.postSaleMoney, len(stats.PostSaleMoney))

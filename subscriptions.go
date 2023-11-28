@@ -1,9 +1,9 @@
 package boosty
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type Subscription struct {
@@ -49,25 +49,16 @@ type Subscriptions struct {
 	Data   []Subscription `json:"data"`
 }
 
-func (b *Boosty) Subscriptions(offset, limit int) ([]Subscription, error) {
-	u := fmt.Sprintf("/v1/blog/%s/subscription_level/?show_free_level=true&sort_by=on_time&offset=%d&limit=%d&order=gt", b.blog, offset, limit)
-	resp, err := b.request.Request(http.MethodGet, u, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error on do request: %w", err)
+func (b *Boosty) Subscriptions(values url.Values) (*Subscriptions, error) {
+	u := fmt.Sprintf("/v1/blog/%s/subscription_level/?%s", b.blog, values.Encode())
+	//u := fmt.Sprintf("/v1/blog/%s/subscription_level/?show_free_level=true&sort_by=on_time&offset=%d&limit=%d&order=gt", b.blog, offset, limit)
+
+	m := Method[Subscriptions]{
+		request: b.request,
+		method:  http.MethodGet,
+		url:     u,
+		values:  url.Values{},
 	}
 
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 400 {
-		return nil, fmt.Errorf("boosty subscriptions status error")
-	}
-
-	res := Subscriptions{
-		Data: []Subscription{},
-	}
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
-		return nil, fmt.Errorf("boosty subscriptions decode error: %w", err)
-	}
-
-	return res.Data, nil
+	return m.Call(Subscriptions{})
 }

@@ -1,9 +1,9 @@
 package boosty
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type Current struct {
@@ -17,21 +17,13 @@ type Current struct {
 
 func (b *Boosty) Current() (*Current, error) {
 	u := fmt.Sprintf("/v1/blog/stat/%s/current", b.blog)
-	resp, err := b.request.Request(http.MethodGet, u, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error on do request: %w", err)
+
+	m := Method[Current]{
+		request: b.request,
+		method:  http.MethodGet,
+		url:     u,
+		values:  url.Values{},
 	}
 
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 400 {
-		return nil, fmt.Errorf("boosty current status error")
-	}
-
-	res := &Current{}
-	if err := json.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, fmt.Errorf("boosty current decode error: %w", err)
-	}
-
-	return res, nil
+	return m.Call(Current{})
 }

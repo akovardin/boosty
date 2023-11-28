@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 
 	"kovardin.ru/projects/boosty"
 	"kovardin.ru/projects/boosty/auth"
@@ -42,5 +43,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("current: %+v", s)
+	fmt.Printf("current: %+v\n\n", s)
+
+	v := url.Values{}
+	v.Add("offset", "0")
+	v.Add("limit", "100")
+
+	ss, err := b.Subscribers(v)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, s := range ss.Data {
+		fmt.Printf("subscriber: %+v\n\n", s)
+	}
 }

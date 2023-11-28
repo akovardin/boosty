@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
-	
+
 	"github.com/stretchr/testify/suite"
 	"kovardin.ru/projects/boosty/auth"
 	"kovardin.ru/projects/boosty/request"
@@ -57,12 +58,18 @@ func (s *SubscribersTestSuite) TestSubscribers() {
 			b, err := New("", WithRequest(req))
 			s.Assert().NoError(err)
 
-			ss, err := b.Subscribers(0, 10)
+			v := url.Values{}
+			v.Add("offset", "0")
+			v.Add("limit", "10")
+			v.Add("order", "gt")
+			v.Add("sort_by", "on_time")
+
+			ss, err := b.Subscribers(v)
 
 			s.Assert().NoError(err)
-			s.Assert().Equal(test.count, len(ss))
-			if len(ss) > 0 {
-				s.Assert().Equal(test.name, ss[0].Name)
+			s.Assert().Equal(test.count, len(ss.Data))
+			if len(ss.Data) > 0 {
+				s.Assert().Equal(test.name, ss.Data[0].Name)
 			}
 		})
 	}

@@ -1,9 +1,9 @@
 package boosty
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type Point struct {
@@ -37,46 +37,15 @@ type Stats struct {
 	Holds               []Point `json:"holds"`
 }
 
-func (b *Boosty) Stats() (*Stats, error) {
-	u := fmt.Sprintf("/v1/target/%s/", b.blog)
-	resp, err := b.request.Request(http.MethodGet, u, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error on do request: %w", err)
+func (b *Boosty) Stats(values url.Values) (*Stats, error) {
+	u := fmt.Sprintf("v1/blog/%s/stat/data/?%s", b.blog, values.Encode())
+
+	m := Method[Stats]{
+		request: b.request,
+		method:  http.MethodGet,
+		url:     u,
+		values:  url.Values{},
 	}
 
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 400 {
-		return nil, fmt.Errorf("boosty stats status error")
-	}
-
-	res := &Stats{
-		PostSaleMoney:       []Point{},
-		UpSubscribers:       []Point{},
-		MessagesSale:        []Point{},
-		DecSubscribers:      []Point{},
-		PostsSale:           []Point{},
-		DonationsMoney:      []Point{},
-		GiftsSaleSaleMoney:  []Point{},
-		MessagesSaleMoney:   []Point{},
-		TotalMoney:          []Point{},
-		DecFollowers:        []Point{},
-		IncSubscribersMoney: []Point{},
-		RecurrentsMoney:     []Point{},
-		Recurrents:          []Point{},
-		ReferalMoney:        []Point{},
-		ReferalMoneyOut:     []Point{},
-		IncFollowers:        []Point{},
-		Referal:             []Point{},
-		Donations:           []Point{},
-		IncSubscribers:      []Point{},
-		GiftsSale:           []Point{},
-		UpSubscribersMoney:  []Point{},
-		Holds:               []Point{},
-	}
-	if err := json.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, fmt.Errorf("boosty stats decode error: %w", err)
-	}
-
-	return res, nil
+	return m.Call(Stats{})
 }
