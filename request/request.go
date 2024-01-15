@@ -103,7 +103,7 @@ func (b *Request) refresh() error {
 
 	info := auth.Info{}
 
-	if err := json.NewDecoder(resp.Body).Decode(info); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
 		return fmt.Errorf("boosty refresh decode error: %w", err)
 	}
 
