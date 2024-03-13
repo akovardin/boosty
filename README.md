@@ -4,13 +4,13 @@
 
 ## Использование
 
-Установка не совсем стандартная. Нужно использовать отдельный домен для go get
+Установка чуть нестандартная. Нужно использовать отдельный домен для go get:
 
 ```shell
 go get kovardin.ru/projects/boosty
 ```
 
-Пакет будет устанавливать из оригинального репозитория https://gitflic.ru/project/getapp/boosty
+Пакет будет устанавливаться из оригинального репозитория https://gitflic.ru/project/getapp/boosty
 
 Для инициализации необходимо указать блог и токен. Токен можно забрать из браузера
 
@@ -40,4 +40,31 @@ if err != nil {
     log.Fatal(err)
 }
 ```
+
+## Откуда брать авторизацию
+
+Данные авторизации нужно забрать из cookies
+
+![auth.png](auth.png)
+
+Эти данные нужно перенести в JSON в файл .boosty - этот файл используется по умолчанию
+
+```json
+{
+  "accessToken":"xxxxxxxxxxxxxxx",
+  "refreshToken":"xxxxxxxxxxxxxxx",
+  "expiresAt":1710966525,
+  "deviceId":"xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx"
+}
+```
+
+`deviceId` - этот параметр нужно получить отдельно из cookie:
+
+![device.png](device.png)
+
+Если данные авторизации протухнут, то библиотека сама попробует обновить 
+авторизационные данные и сохранить из в файле .boosty
+
+## Обновления
+
 Канал с новостями [@kodikapusta](https://t.me/kodikapusta)

@@ -1,12 +1,14 @@
 package request
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
+	"time"
 
 	"kovardin.ru/projects/boosty/auth"
 )
@@ -66,7 +68,7 @@ func (b *Request) do(method string, u string, body io.Reader) (*http.Response, e
 		return nil, fmt.Errorf("boosty stats request error: %w", err)
 	}
 
-	req.Header.Add("Authorization", b.auth.Bearer())
+	req.Header.Add("Authorization", b.auth.BearerHeader())
 
 	resp, err := b.client.Do(req)
 	if err != nil {
@@ -76,35 +78,51 @@ func (b *Request) do(method string, u string, body io.Reader) (*http.Response, e
 	return resp, nil
 }
 
+type Refresh struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int64  `json:"expires_in"`
+}
+
 func (b *Request) refresh() error {
-	if b.auth.Refresh() == "" {
+	if b.auth.RefreshToken() == "" {
 		return errors.New("empty refresh token")
 	}
 
-	// TODO: change device id
-	body := `
-{
-	"device_id": "91cd83c5-7130-4a85-8ef2-66898d4ced5b;",
-	"device_os": "web",
-	"grant_type": "refresh_token",
-	"refresh_token": "` + b.auth.Refresh() + `",
-}
-`
+	form := url.Values{}
+	form.Add("device_id", b.auth.DeviceId())
+	form.Add("device_os", "web")
+	form.Add("grant_type", "refresh_token")
+	form.Add("refresh_token", b.auth.RefreshToken())
 
-	req, err := http.NewRequest(http.MethodPost, b.url+"/oauth/token/", bytes.NewReader([]byte(body)))
+	req, err := http.NewRequest(http.MethodPost, b.url+"/oauth/token/", strings.NewReader(form.Encode()))
 	if err != nil {
 		return fmt.Errorf("boosty refresh request error: %w", err)
 	}
 
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36")
+	req.Header.Set("Authorization", b.auth.BearerHeader())
 	resp, err := b.client.Do(req)
 	if err != nil {
 		return fmt.Errorf("boosty refresh do error: %w", err)
 	}
 
-	info := auth.Info{}
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("boosty refresh do error: %d", resp.StatusCode)
+	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
+	refresh := Refresh{}
+
+	if err := json.NewDecoder(resp.Body).Decode(&refresh); err != nil {
 		return fmt.Errorf("boosty refresh decode error: %w", err)
+	}
+
+	info := auth.Info{
+		AccessToken:  refresh.AccessToken,
+		RefreshToken: refresh.RefreshToken,
+		ExpiresAt:    time.Now().Unix() + refresh.ExpiresIn,
+		DeviceId:     b.auth.DeviceId(),
 	}
 
 	b.auth.Update(info)

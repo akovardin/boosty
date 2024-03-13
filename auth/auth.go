@@ -11,7 +11,8 @@ type Callback func(info Info)
 type Info struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
-	ExpiresAt    int    `json:"expiresAt"`
+	ExpiresAt    int64  `json:"expiresAt"`
+	DeviceId     string `json:"deviceId"`
 }
 
 type Auth struct {
@@ -46,12 +47,16 @@ func (a *Auth) Update(info Info) {
 	}
 }
 
-func (a *Auth) Bearer() string {
+func (a *Auth) BearerHeader() string {
 	return "Bearer " + a.info.AccessToken
 }
 
-func (a *Auth) Refresh() string {
+func (a *Auth) RefreshToken() string {
 	return a.info.RefreshToken
+}
+
+func (a *Auth) DeviceId() string {
+	return a.info.DeviceId
 }
 
 func (a *Auth) Save() error {
