@@ -1,4 +1,4 @@
-module kovardin.ru/projects/boosty
+module gohome.4gophers.ru/getapp/boosty 
 
 go 1.21
 

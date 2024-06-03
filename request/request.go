@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"kovardin.ru/projects/boosty/auth"
+	"gohome.4gophers.ru/getapp/boosty/auth"
 )
 
 type Request struct {

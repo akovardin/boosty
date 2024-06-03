@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"kovardin.ru/projects/boosty"
-	"kovardin.ru/projects/boosty/auth"
-	"kovardin.ru/projects/boosty/request"
+	"gohome.4gophers.ru/getapp/boosty"
+	"gohome.4gophers.ru/getapp/boosty/auth"
+	"gohome.4gophers.ru/getapp/boosty/request"
 )
 
 func main() {

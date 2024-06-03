@@ -1,7 +1,7 @@
 package boosty
 
 import (
-	"kovardin.ru/projects/boosty/request"
+	"gohome.4gophers.ru/getapp/boosty/request"
 )
 
 type Boosty struct {

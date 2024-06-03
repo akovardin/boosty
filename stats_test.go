@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/suite"
-	"kovardin.ru/projects/boosty/auth"
-	"kovardin.ru/projects/boosty/request"
+	"gohome.4gophers.ru/getapp/boosty/auth"
+	"gohome.4gophers.ru/getapp/boosty/request"
 )
 
 type StatsTestSuite struct {

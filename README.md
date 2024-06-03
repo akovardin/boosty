@@ -7,7 +7,7 @@
 Установка чуть нестандартная. Нужно использовать отдельный домен для go get:
 
 ```shell
-go get kovardin.ru/projects/boosty
+go get gohome.4gophers.ru/getapp/boosty
 ```
 
 Пакет будет устанавливаться из оригинального репозитория https://gitflic.ru/project/getapp/boosty

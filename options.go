@@ -1,6 +1,6 @@
 package boosty
 
-import "kovardin.ru/projects/boosty/request"
+import "gohome.4gophers.ru/getapp/boosty/request"
 
 type Option func(b *Boosty) error
 

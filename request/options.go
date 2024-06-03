@@ -3,7 +3,7 @@ package request
 import (
 	"net/http"
 
-	"kovardin.ru/projects/boosty/auth"
+	"gohome.4gophers.ru/getapp/boosty/auth"
 )
 
 type Option func(b *Request) error

@@ -3,8 +3,9 @@ package boosty
 import (
 	"encoding/json"
 	"fmt"
-	"kovardin.ru/projects/boosty/request"
 	"net/url"
+
+	"gohome.4gophers.ru/getapp/boosty/request"
 )
 
 type Method[T interface{}] struct {
