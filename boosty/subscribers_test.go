@@ -16,9 +16,7 @@ type SubscribersTestSuite struct {
 	suite.Suite
 }
 
-func (s *SubscribersTestSuite) SetupTest() {
-	//
-}
+func (s *SubscribersTestSuite) SetupTest() {}
 
 func (s *SubscribersTestSuite) TestSubscribers() {
 	tests := map[string]struct {

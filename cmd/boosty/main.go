@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"gohome.4gophers.ru/getapp/boosty"
 	"gohome.4gophers.ru/getapp/boosty/auth"
+	"gohome.4gophers.ru/getapp/boosty/boosty"
 	"gohome.4gophers.ru/getapp/boosty/request"
 )
 
@@ -33,7 +33,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	b, err := boosty.New("getapp", boosty.WithRequest(request))
+	b, err := boosty.New("kodikapusta", boosty.WithRequest(request))
 	if err != nil {
 		log.Fatal(err)
 	}

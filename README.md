@@ -15,6 +15,16 @@ go get gohome.4gophers.ru/getapp/boosty
 Для инициализации необходимо указать блог и токен. Токен можно забрать из браузера
 
 ```golang
+import (
+    "log"
+    "net/http"
+
+    "gohome.4gophers.ru/getapp/boosty/auth"
+    "gohome.4gophers.ru/getapp/boosty/boosty"
+    "gohome.4gophers.ru/getapp/boosty/request"
+)
+
+
 auth, err := auth.New(
 	auth.WithFile(".boosty"), 
 	// auth.WithInfo(auth.Info{}), 
@@ -68,3 +78,4 @@ if err != nil {
 ## Обновления
 
 Канал с новостями [@kodikapusta](https://t.me/kodikapusta)
+Статьи на [kodikapusta.ru](https://kodikapusta.ru/)
