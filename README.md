@@ -77,5 +77,4 @@ if err != nil {
 
 ## Обновления
 
-Канал с новостями [@kodikapusta](https://t.me/kodikapusta)
-Статьи на [kodikapusta.ru](https://kodikapusta.ru/)
+Канал с новостями [@kodikapusta](https://t.me/kodikapusta) и статьи на [kodikapusta.ru](https://kodikapusta.ru/)
