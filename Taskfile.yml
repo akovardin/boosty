@@ -5,7 +5,7 @@ version: '3'
 tasks:  
   gitpush:
     cmds:
-      - git push gitflic master
+      - git push origin master
       - git push sourcecraft master
       - git push github master
       - git push gitverse master
